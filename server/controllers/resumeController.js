@@ -73,7 +73,19 @@ export const analyzeResumeFromFile = async (req, res) => {
                req.file.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
       fileType = 'docx';
     }
-    const resumeText = await resumeParserService.parseFile(req.file.path, fileType);
+    
+    console.log(`Parsing file: ${req.file.originalname}, type: ${fileType}, mimetype: ${req.file.mimetype}`);
+    let resumeText;
+    try {
+      resumeText = await resumeParserService.parseFile(req.file.path, fileType);
+    } catch (parseError) {
+      console.error('File parsing error:', parseError);
+      await resumeParserService.deleteFile(req.file.path);
+      return res.status(500).json({
+        success: false,
+        message: `Failed to parse ${fileType.toUpperCase()} file: ${parseError.message}`
+      });
+    }
     
     if (!resumeText || resumeText.trim().length === 0) {
       await resumeParserService.deleteFile(req.file.path);
