@@ -28,60 +28,65 @@ const Navbar = () => {
 
   return (
     <nav className="bg-white/95 backdrop-blur-lg shadow-lg sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-8 py-4 flex justify-between items-center">
-        <Link to="/" className="flex items-center gap-3 text-indigo-600 text-2xl font-bold transition-transform hover:text-indigo-700 hover:scale-105">
-          <FaBrain className="text-4xl" />
-          <span>AI Resume Analyzer</span>
-        </Link>
-        
-        <ul className="flex gap-8 items-center">
-          <li>
-            <Link 
-              to="/" 
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl font-semibold transition-all ${
-                location.pathname === '/' 
-                  ? 'text-indigo-600 bg-indigo-100' 
-                  : 'text-gray-700 hover:text-indigo-600 hover:bg-indigo-50'
-              }`}
-            >
-              <FaHome />
-              <span>Home</span>
-            </Link>
-          </li>
-          <li>
-            <Link 
-              to="/history" 
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl font-semibold transition-all ${
-                location.pathname === '/history' 
-                  ? 'text-indigo-600 bg-indigo-100' 
-                  : 'text-gray-700 hover:text-indigo-600 hover:bg-indigo-50'
-              }`}
-            >
-              <FaHistory />
-              <span>History</span>
-            </Link>
-          </li>
-          <li>
-            <div className={`flex items-center gap-2 px-4 py-2 rounded-xl font-semibold ${
-              backendStatus === 'online' 
-                ? 'bg-green-100 text-green-700' 
-                : backendStatus === 'offline'
-                ? 'bg-red-100 text-red-700'
-                : 'bg-yellow-100 text-yellow-700'
-            }`}>
-              <div className={`w-2 h-2 rounded-full ${
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
+        <div className="flex justify-between items-center">
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-2 sm:gap-3 text-indigo-600 text-lg sm:text-2xl font-bold transition-transform hover:text-indigo-700 hover:scale-105">
+            <FaBrain className="text-2xl sm:text-4xl" />
+            <span className="hidden sm:inline">AI Resume Analyzer</span>
+            <span className="sm:hidden">AI Resume</span>
+          </Link>
+          
+          {/* Navigation Links */}
+          <ul className="flex gap-2 sm:gap-4 lg:gap-8 items-center">
+            <li>
+              <Link 
+                to="/" 
+                className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 rounded-xl font-semibold text-xs sm:text-base transition-all ${
+                  location.pathname === '/' 
+                    ? 'text-indigo-600 bg-indigo-100' 
+                    : 'text-gray-700 hover:text-indigo-600 hover:bg-indigo-50'
+                }`}
+              >
+                <FaHome className="text-sm sm:text-base" />
+                <span className="hidden sm:inline">Home</span>
+              </Link>
+            </li>
+            <li>
+              <Link 
+                to="/history" 
+                className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 rounded-xl font-semibold text-xs sm:text-base transition-all ${
+                  location.pathname === '/history' 
+                    ? 'text-indigo-600 bg-indigo-100' 
+                    : 'text-gray-700 hover:text-indigo-600 hover:bg-indigo-50'
+                }`}
+              >
+                <FaHistory className="text-sm sm:text-base" />
+                <span className="hidden sm:inline">History</span>
+              </Link>
+            </li>
+            <li>
+              <div className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-2 rounded-xl font-semibold ${
                 backendStatus === 'online' 
-                  ? 'bg-green-500 animate-pulse' 
+                  ? 'bg-green-100 text-green-700' 
                   : backendStatus === 'offline'
-                  ? 'bg-red-500'
-                  : 'bg-yellow-500 animate-pulse'
-              }`} />
-              <span className="text-sm">
-                {backendStatus === 'online' ? 'Backend Online' : backendStatus === 'offline' ? 'Backend Offline' : 'Checking...'}
-              </span>
-            </div>
-          </li>
-        </ul>
+                  ? 'bg-red-100 text-red-700'
+                  : 'bg-yellow-100 text-yellow-700'
+              }`}>
+                <div className={`w-2 h-2 rounded-full flex-shrink-0 ${
+                  backendStatus === 'online' 
+                    ? 'bg-green-500 animate-pulse' 
+                    : backendStatus === 'offline'
+                    ? 'bg-red-500'
+                    : 'bg-yellow-500 animate-pulse'
+                }`} />
+                <span className="text-xs whitespace-nowrap">
+                  {backendStatus === 'online' ? 'Online' : backendStatus === 'offline' ? 'Offline' : 'Check...'}
+                </span>
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
     </nav>
   );
