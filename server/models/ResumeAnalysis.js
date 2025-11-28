@@ -26,7 +26,7 @@ const resumeAnalysisSchema = new mongoose.Schema({
   },
   fileType: {
     type: String,
-    enum: ['pdf', 'txt', 'text'],
+    enum: ['pdf', 'txt', 'text', 'docx'],
     default: 'text'
   },
   
