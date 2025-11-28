@@ -48,6 +48,16 @@ export const analyzeResumeFromFile = async (req, res) => {
       });
     }
 
+    // Validate file type
+    const allowedMimeTypes = ['application/pdf', 'text/plain'];
+    if (!allowedMimeTypes.includes(req.file.mimetype)) {
+      await resumeParserService.deleteFile(req.file.path);
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid file type. Please upload a PDF or TXT file only.'
+      });
+    }
+
     // Parse the uploaded file
     const fileType = req.file.mimetype === 'application/pdf' ? 'pdf' : 'txt';
     const resumeText = await resumeParserService.parseFile(req.file.path, fileType);
@@ -56,7 +66,7 @@ export const analyzeResumeFromFile = async (req, res) => {
       await resumeParserService.deleteFile(req.file.path);
       return res.status(400).json({
         success: false,
-        message: 'Could not extract text from file'
+        message: 'Could not extract text from file. Please ensure the file contains readable text.'
       });
     }
 
@@ -135,10 +145,17 @@ export const analyzeResumeFromText = async (req, res) => {
       });
     }
 
-    if (resumeText.trim().length < 50) {
+    if (resumeText.trim().length < 100) {
       return res.status(400).json({
         success: false,
-        message: 'Resume text is too short. Please provide more details.'
+        message: 'Resume text is too short. Please provide at least 100 characters with professional details like experience, education, or skills.'
+      });
+    }
+
+    if (resumeText.trim().length > 50000) {
+      return res.status(400).json({
+        success: false,
+        message: 'Resume text is too long. Please keep it under 50,000 characters.'
       });
     }
 

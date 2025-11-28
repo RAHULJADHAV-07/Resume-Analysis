@@ -35,6 +35,12 @@ class AIService {
   }
 
   async analyzeResume(resumeText) {
+    // Validate if content looks like a resume
+    const validation = this.validateResumeContent(resumeText);
+    if (!validation.isValid) {
+      throw new Error(validation.message);
+    }
+
     const prompt = this.createPrompt(resumeText);
 
     if (this.provider === "gemini") {
@@ -44,6 +50,67 @@ class AIService {
     } else {
       throw new Error("Invalid AI provider");
     }
+  }
+
+  validateResumeContent(text) {
+    // Check minimum length
+    if (!text || text.trim().length < 100) {
+      return {
+        isValid: false,
+        message: "File content is too short. Please upload a proper resume with at least 100 characters."
+      };
+    }
+
+    // Check maximum length (prevent abuse)
+    if (text.length > 50000) {
+      return {
+        isValid: false,
+        message: "File content is too long. Please upload a resume under 50,000 characters."
+      };
+    }
+
+    // Common resume keywords (at least one should be present)
+    const resumeKeywords = [
+      'experience', 'education', 'skills', 'work', 'professional',
+      'qualifications', 'achievements', 'responsibilities', 'projects',
+      'university', 'college', 'degree', 'bachelor', 'master',
+      'employed', 'developer', 'engineer', 'manager', 'analyst',
+      'resume', 'cv', 'curriculum', 'profile', 'objective', 'summary'
+    ];
+
+    const lowerText = text.toLowerCase();
+    const hasResumeKeyword = resumeKeywords.some(keyword => lowerText.includes(keyword));
+
+    if (!hasResumeKeyword) {
+      return {
+        isValid: false,
+        message: "This doesn't appear to be a resume. Please upload a valid resume document containing professional experience, education, or skills."
+      };
+    }
+
+    // Check for common non-resume patterns
+    const nonResumePatterns = [
+      /^<!DOCTYPE html/i,
+      /<html/i,
+      /^{\s*".*":\s*{/,  // JSON files
+      /^<\?xml/i,         // XML files
+      /BEGIN CERTIFICATE/i,
+      /^import\s+/m,      // Code files
+      /^package\s+/m,
+      /^def\s+\w+\(/m,
+      /^function\s+\w+\(/m
+    ];
+
+    for (const pattern of nonResumePatterns) {
+      if (pattern.test(text)) {
+        return {
+          isValid: false,
+          message: "Invalid file type detected. Please upload a resume in PDF or TXT format, not code, HTML, or other document types."
+        };
+      }
+    }
+
+    return { isValid: true };
   }
 
   createPrompt(resumeText) {
