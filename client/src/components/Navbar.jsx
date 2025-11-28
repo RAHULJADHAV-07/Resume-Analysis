@@ -9,7 +9,9 @@ const Navbar = () => {
   useEffect(() => {
     const checkBackend = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/resumes');
+        const apiUrl = import.meta.env.VITE_API_URL || 'https://ai-resume-analyzer-api.onrender.com/api';
+        const baseUrl = apiUrl.replace('/api', '');
+        const response = await fetch(`${baseUrl}/api/resumes`);
         if (response.ok) {
           setBackendStatus('online');
         } else {
