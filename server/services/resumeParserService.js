@@ -1,5 +1,6 @@
 import fs from 'fs/promises';
 import pdfParse from 'pdf-parse';
+import mammoth from 'mammoth';
 
 class ResumeParserService {
   async parseFile(filePath, fileType) {
@@ -8,6 +9,8 @@ class ResumeParserService {
         return await this.parsePDF(filePath);
       } else if (fileType === 'txt' || fileType === 'text' || filePath.endsWith('.txt')) {
         return await this.parseTXT(filePath);
+      } else if (fileType === 'docx' || filePath.endsWith('.docx') || filePath.endsWith('.doc')) {
+        return await this.parseDOCX(filePath);
       } else {
         throw new Error('Unsupported file type');
       }
@@ -33,6 +36,16 @@ class ResumeParserService {
       return text;
     } catch (error) {
       throw new Error(`TXT parsing error: ${error.message}`);
+    }
+  }
+
+  async parseDOCX(filePath) {
+    try {
+      const buffer = await fs.readFile(filePath);
+      const result = await mammoth.extractRawText({ buffer });
+      return result.value;
+    } catch (error) {
+      throw new Error(`DOCX parsing error: ${error.message}`);
     }
   }
 

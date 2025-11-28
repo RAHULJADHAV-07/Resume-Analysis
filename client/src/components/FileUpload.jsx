@@ -34,11 +34,16 @@ const FileUpload = ({ onFileSelect, selectedFile, onClear }) => {
   };
 
   const validateAndSetFile = (file) => {
-    const validTypes = ['application/pdf', 'text/plain'];
+    const validTypes = [
+      'application/pdf', 
+      'text/plain',
+      'application/msword', // .doc
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document' // .docx
+    ];
     const maxSize = 5 * 1024 * 1024; // 5MB
 
     if (!validTypes.includes(file.type)) {
-      alert('Please upload a PDF or TXT file only');
+      alert('Please upload a PDF, TXT, DOC, or DOCX file only');
       return;
     }
 
@@ -71,12 +76,12 @@ const FileUpload = ({ onFileSelect, selectedFile, onClear }) => {
               browse
             </label>
           </p>
-          <p className="text-sm text-gray-500">Supports: PDF, TXT (Max 5MB)</p>
+          <p className="text-sm text-gray-500">Supports: PDF, TXT, DOC, DOCX (Max 5MB)</p>
           <input
             id="file-input"
             type="file"
             className="hidden"
-            accept=".pdf,.txt"
+            accept=".pdf,.txt,.doc,.docx"
             onChange={handleChange}
           />
         </div>

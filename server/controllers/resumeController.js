@@ -49,17 +49,30 @@ export const analyzeResumeFromFile = async (req, res) => {
     }
 
     // Validate file type
-    const allowedMimeTypes = ['application/pdf', 'text/plain'];
+    const allowedMimeTypes = [
+      'application/pdf', 
+      'text/plain',
+      'application/msword', // .doc
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document' // .docx
+    ];
     if (!allowedMimeTypes.includes(req.file.mimetype)) {
       await resumeParserService.deleteFile(req.file.path);
       return res.status(400).json({
         success: false,
-        message: 'Invalid file type. Please upload a PDF or TXT file only.'
+        message: 'Invalid file type. Please upload a PDF, TXT, DOC, or DOCX file only.'
       });
     }
 
     // Parse the uploaded file
-    const fileType = req.file.mimetype === 'application/pdf' ? 'pdf' : 'txt';
+    let fileType;
+    if (req.file.mimetype === 'application/pdf') {
+      fileType = 'pdf';
+    } else if (req.file.mimetype === 'text/plain') {
+      fileType = 'txt';
+    } else if (req.file.mimetype === 'application/msword' || 
+               req.file.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+      fileType = 'docx';
+    }
     const resumeText = await resumeParserService.parseFile(req.file.path, fileType);
     
     if (!resumeText || resumeText.trim().length === 0) {

@@ -21,12 +21,17 @@ const storage = multer.diskStorage({
 
 // File filter
 const fileFilter = (req, file, cb) => {
-  const allowedTypes = ['application/pdf', 'text/plain'];
+  const allowedTypes = [
+    'application/pdf', 
+    'text/plain',
+    'application/msword', // .doc
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document' // .docx
+  ];
   
   if (allowedTypes.includes(file.mimetype)) {
     cb(null, true);
   } else {
-    cb(new Error('Invalid file type. Only PDF and TXT files are allowed.'), false);
+    cb(new Error('Invalid file type. Only PDF, TXT, DOC, and DOCX files are allowed.'), false);
   }
 };
 
