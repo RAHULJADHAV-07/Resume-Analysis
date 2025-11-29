@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 const Navbar = () => {
   const location = useLocation();
   const [backendStatus, setBackendStatus] = useState('checking');
+  const [showWaitMessage, setShowWaitMessage] = useState(false);
 
   useEffect(() => {
     const checkBackend = async () => {
@@ -67,14 +68,18 @@ const Navbar = () => {
                 <span className="hidden sm:inline">History</span>
               </Link>
             </li>
-            <li>
-              <div className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-2 rounded-xl font-semibold ${
-                backendStatus === 'online' 
-                  ? 'bg-green-100 text-green-700' 
-                  : backendStatus === 'offline'
-                  ? 'bg-red-100 text-red-700'
-                  : 'bg-yellow-100 text-yellow-700'
-              }`}>
+            <li className="relative">
+              <div 
+                className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-2 rounded-xl font-semibold cursor-pointer ${
+                  backendStatus === 'online' 
+                    ? 'bg-green-100 text-green-700' 
+                    : backendStatus === 'offline'
+                    ? 'bg-red-100 text-red-700'
+                    : 'bg-yellow-100 text-yellow-700'
+                }`}
+                onMouseEnter={() => backendStatus === 'checking' && setShowWaitMessage(true)}
+                onMouseLeave={() => setShowWaitMessage(false)}
+              >
                 <div className={`w-2 h-2 rounded-full flex-shrink-0 ${
                   backendStatus === 'online' 
                     ? 'bg-green-500 animate-pulse' 
@@ -86,6 +91,15 @@ const Navbar = () => {
                   {backendStatus === 'online' ? 'Online' : backendStatus === 'offline' ? 'Offline' : 'Check...'}
                 </span>
               </div>
+              
+              {/* Tooltip/Popup Message */}
+              {showWaitMessage && backendStatus === 'checking' && (
+                <div className="absolute top-full right-0 mt-2 w-64 bg-yellow-50 border-2 border-yellow-400 rounded-lg shadow-lg p-3 z-50 animate-fadeIn">
+                  <p className="text-yellow-800 text-xs sm:text-sm font-medium">
+                    ⏱️ Average waiting time of 30 seconds to load backend
+                  </p>
+                </div>
+              )}
             </li>
           </ul>
         </div>
