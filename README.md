@@ -390,29 +390,6 @@ DELETE /resumes/:id
 
 ---
 
-## 📸 Screenshots
-
-### Home Page - File Upload
-<div align="center">
-  <i>Beautiful gradient background with drag-and-drop file upload interface</i>
-</div>
-
-### Analysis Results
-<div align="center">
-  <i>Comprehensive AI-generated analysis with skills, summary, and job recommendations</i>
-</div>
-
-### History Page
-<div align="center">
-  <i>Search and manage all your past resume analyses</i>
-</div>
-
-### Backend Status Indicator
-<div align="center">
-  <i>Real-time backend health monitoring with wait time tooltip</i>
-</div>
-
----
 
 ## 🤝 Contributing
 
